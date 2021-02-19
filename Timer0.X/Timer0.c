@@ -8,7 +8,6 @@
 
 #include <xc.h>
 #include <pic18f4550.h>
-#include <pic18.h>
 #include "Configuracion.h"
 
 #define TRSMD LATDbits.LD0
@@ -18,14 +17,15 @@
 #define TRSTP LATDbits.LD4
 #define DisplaysPort LATB
 
-int DATTMR0 = 64754; //57725;
+int DATTMR0 = 57725; //64754; //57725;
+char milsecons = 90;
 
 int display [] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x67};
 
-char Sunidades = 9;
-char Munidades = 9;
-char Sdecenas = 5;
 char Mdecenas = 5;
+char Munidades = 9;
+char Sdecenas = 4;
+char Sunidades = 5;
 
 
 void Init(void);
@@ -40,42 +40,33 @@ void main(void) {
         //TRSSU = 0;
         //TRSSD = 0;
         //DisplaysPort = display[Sunidades];
-        if (Sunidades == 10) {
-            Sunidades = 0;
-            if (Sdecenas == 5) {
-                Sdecenas = 0;
-                if (Munidades == 9) {
-                    Munidades = 0;
-                    if (Mdecenas == 5) {
-                        Mdecenas = 0;
-                    } else {
-                        Mdecenas++;
-                        TRSMD = 0;
-                        TRSSU = 1;
-                        TRSMU = 1;
-                        TRSSD = 1;
-                        LATB = display[Mdecenas];
-                    }
-                } else {
-                    Munidades++;
 
-                    TRSSU = 1;
-                    TRSMD = 1;
-                    TRSMU = 0;
-                    TRSSD = 1;
-                    LATB = display[Munidades];
-                }
-            } else {
-                Sdecenas++;
-                TRSSD = 0;
-                TRSSU = 1;
-                TRSMD = 1;
-                TRSMU = 1;
-
-                LATB = display[Sdecenas];
-            }
-        }
-
+        TRSTP = 1;
+        __delay_ms(milsecons);
+        TRSMD = 0;
+        TRSSU = 1;
+        TRSMU = 1;
+        TRSSD = 1;
+        LATB = display[Mdecenas];
+        __delay_ms(milsecons);
+        TRSSU = 1;
+        TRSMD = 1;
+        TRSMU = 0;
+        TRSSD = 1;
+        LATB = display[Munidades];
+        __delay_ms(milsecons);
+        TRSSD = 0;
+        TRSSU = 1;
+        TRSMD = 1;
+        TRSMU = 1;
+        LATB = display[Sdecenas];
+        __delay_ms(milsecons);
+        TRSSU = 0;
+        TRSMD = 1;
+        TRSMU = 1;
+        TRSSD = 1;
+        LATB = display[Sunidades];
+        __delay_ms(milsecons);
     }
 
     return;
@@ -117,11 +108,27 @@ void __interrupt() Timer0(void) {
         TMR0H = DATTMR0;
         TMR0L = (DATTMR0) >> 8;
         Sunidades++;
-        TRSSU = 0;
-        TRSMD = 1;
-        TRSMU = 1;
-        TRSSD = 1;
-        LATB = display[Sunidades];
+        if (Sunidades >= 9) {
+            Sunidades = 0;
+            if (Sdecenas >= 5) {
+                Sdecenas = 0;
+                if (Munidades >= 9) {
+                    Munidades = 0;
+                    if (Mdecenas >= 5) {
+                        Mdecenas = 0;
+                    } else {
+                        Mdecenas++;
+
+                    }
+                } else {
+                    Munidades++;
+
+                }
+            } else {
+                Sdecenas++;
+            }
+        }
+        TRSTP = 0;
         INTCONbits.T0IF = 0;
 
     }
