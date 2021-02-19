@@ -18,7 +18,7 @@
 #define TRSTP LATDbits.LD4
 #define DisplaysPort LATB
 
-int DATTMR0 = 57725;
+int DATTMR0 = 64754 ;//57725;
 
 int display [] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x67};
 
@@ -35,16 +35,9 @@ void main(void) {
 
     while (1) {
         TRSSU = 0;
-        if (INTCONbits.T0IF) {
-            TMR0H = DATTMR0;
-            TMR0L = (DATTMR0) >> 8;
-            DisplaysPort = display[count++];
-            if (count > 9) {
-                count = 0;
-            }
-            INTCONbits.T0IF = 0;
-
-        }
+        TRSSD = 0;
+        DisplaysPort = display[count];
+ 
 
 
 
@@ -78,19 +71,23 @@ void InitTMR0(void) {
     T0CONbits.TMR0ON = 1; // activo el Timer0
 
 
+    TMR0H = DATTMR0;
+    TMR0L = (DATTMR0) >> 8;
+
 }
-/*
+
 void __interrupt() Timer0(void) {
 
-    if (INTCONbits.T0IF ) {
-            TMR0H = DATTMR0;
-            TMR0L = (DATTMR0) >> 8;
-            DisplaysPort = display[count++];
-            if (count > 9) {
-                count = 0;
-            }
-            INTCONbits.T0IF = 0;
-
+    if (INTCONbits.T0IF) {
+        TMR0H = DATTMR0;
+        TMR0L = (DATTMR0) >> 8;
+        //DisplaysPort = display[count++];
+        count++;
+        if (count > 9) {
+            count = 0;
         }
+        INTCONbits.T0IF = 0;
 
-}*/
+    }
+
+}

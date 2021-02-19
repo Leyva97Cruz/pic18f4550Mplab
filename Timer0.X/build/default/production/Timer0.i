@@ -5633,7 +5633,7 @@ extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 1 "./Configuracion.h" 1
 # 12 "Timer0.c" 2
 # 21 "Timer0.c"
-int DATTMR0 = 57725;
+int DATTMR0 = 64754 ;
 
 int display [] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x67};
 
@@ -5650,16 +5650,9 @@ void main(void) {
 
     while (1) {
         LATDbits.LD3 = 0;
-        if (INTCONbits.T0IF) {
-            TMR0H = DATTMR0;
-            TMR0L = (DATTMR0) >> 8;
-            LATB = display[count++];
-            if (count > 9) {
-                count = 0;
-            }
-            INTCONbits.T0IF = 0;
+        LATDbits.LD2 = 0;
+        LATB = display[count];
 
-        }
 
 
 
@@ -5692,5 +5685,24 @@ void InitTMR0(void) {
     INTCONbits.GIE = 1;
     T0CONbits.TMR0ON = 1;
 
+
+    TMR0H = DATTMR0;
+    TMR0L = (DATTMR0) >> 8;
+
+}
+
+void __attribute__((picinterrupt(("")))) Timer0(void) {
+
+    if (INTCONbits.T0IF) {
+        TMR0H = DATTMR0;
+        TMR0L = (DATTMR0) >> 8;
+
+        count++;
+        if (count > 9) {
+            count = 0;
+        }
+        INTCONbits.T0IF = 0;
+
+    }
 
 }
