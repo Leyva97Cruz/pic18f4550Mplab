@@ -1,10 +1,10 @@
 Version 4.0 HI-TECH Software Intermediate Code
 [p mainexit ]
-"28 Timer0.c
-[; ;Timer0.c: 28: void Init(void);
+"31 Timer0.c
+[; ;Timer0.c: 31: void Init(void);
 [v _Init `(v ~T0 @X0 0 ef ]
-"29
-[; ;Timer0.c: 29: void InitTMR0(void);
+"32
+[; ;Timer0.c: 32: void InitTMR0(void);
 [v _InitTMR0 `(v ~T0 @X0 0 ef ]
 "3269 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f4550.h
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f4550.h: 3269:     struct {
@@ -605,7 +605,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic18f4550.h: 8893: __asm("TOSU equ 0FFFh");
 [; <" TOSU equ 0FFFh ;# ">
 "21 Timer0.c
-[; ;Timer0.c: 21: int DATTMR0 = 64754 ;
+[; ;Timer0.c: 21: int DATTMR0 = 64754;
 [v _DATTMR0 `i ~T0 @X0 1 e ]
 [i _DATTMR0
 -> -> 64754 `l `i
@@ -628,160 +628,289 @@ Version 4.0 HI-TECH Software Intermediate Code
 ..
 ]
 "25
-[; ;Timer0.c: 25: int count = 0;
-[v _count `i ~T0 @X0 1 e ]
-[i _count
--> 0 `i
+[; ;Timer0.c: 25: char Sunidades = 9;
+[v _Sunidades `uc ~T0 @X0 1 e ]
+[i _Sunidades
+-> -> 9 `i `uc
+]
+"26
+[; ;Timer0.c: 26: char Munidades = 9;
+[v _Munidades `uc ~T0 @X0 1 e ]
+[i _Munidades
+-> -> 9 `i `uc
+]
+"27
+[; ;Timer0.c: 27: char Sdecenas = 5;
+[v _Sdecenas `uc ~T0 @X0 1 e ]
+[i _Sdecenas
+-> -> 5 `i `uc
+]
+"28
+[; ;Timer0.c: 28: char Mdecenas = 5;
+[v _Mdecenas `uc ~T0 @X0 1 e ]
+[i _Mdecenas
+-> -> 5 `i `uc
 ]
 [v $root$_main `(v ~T0 @X0 0 e ]
-"31
-[; ;Timer0.c: 31: void main(void) {
+"34
+[; ;Timer0.c: 34: void main(void) {
 [v _main `(v ~T0 @X0 1 ef ]
 {
 [e :U _main ]
 [f ]
-"33
-[; ;Timer0.c: 33:     Init();
-[e ( _Init ..  ]
-"34
-[; ;Timer0.c: 34:     InitTMR0();
-[e ( _InitTMR0 ..  ]
 "36
-[; ;Timer0.c: 36:     while (1) {
+[; ;Timer0.c: 36:     Init();
+[e ( _Init ..  ]
+"37
+[; ;Timer0.c: 37:     InitTMR0();
+[e ( _InitTMR0 ..  ]
+"39
+[; ;Timer0.c: 39:     while (1) {
 [e :U 369 ]
 {
-"37
-[; ;Timer0.c: 37:         LATDbits.LD3 = 0;
-[e = . . _LATDbits 1 3 -> -> 0 `i `uc ]
-"38
-[; ;Timer0.c: 38:         LATDbits.LD2 = 0;
-[e = . . _LATDbits 1 2 -> -> 0 `i `uc ]
-"39
-[; ;Timer0.c: 39:         LATB = display[count];
-[e = _LATB -> *U + &U _display * -> -> _count `ui `ux -> -> # *U &U _display `ui `ux `uc ]
+"43
+[; ;Timer0.c: 43:         if (Sunidades == 10) {
+[e $ ! == -> _Sunidades `i -> 10 `i 371  ]
+{
 "44
-[; ;Timer0.c: 44:     }
+[; ;Timer0.c: 44:             Sunidades = 0;
+[e = _Sunidades -> -> 0 `i `uc ]
+"45
+[; ;Timer0.c: 45:             if (Sdecenas == 5) {
+[e $ ! == -> _Sdecenas `i -> 5 `i 372  ]
+{
+"46
+[; ;Timer0.c: 46:                 Sdecenas = 0;
+[e = _Sdecenas -> -> 0 `i `uc ]
+"47
+[; ;Timer0.c: 47:                 if (Munidades == 9) {
+[e $ ! == -> _Munidades `i -> 9 `i 373  ]
+{
+"48
+[; ;Timer0.c: 48:                     Munidades = 0;
+[e = _Munidades -> -> 0 `i `uc ]
+"49
+[; ;Timer0.c: 49:                     if (Mdecenas == 5) {
+[e $ ! == -> _Mdecenas `i -> 5 `i 374  ]
+{
+"50
+[; ;Timer0.c: 50:                         Mdecenas = 0;
+[e = _Mdecenas -> -> 0 `i `uc ]
+"51
+[; ;Timer0.c: 51:                     } else {
+}
+[e $U 375  ]
+[e :U 374 ]
+{
+"52
+[; ;Timer0.c: 52:                         Mdecenas++;
+[e ++ _Mdecenas -> -> 1 `i `uc ]
+"53
+[; ;Timer0.c: 53:                         LATDbits.LD0 = 0;
+[e = . . _LATDbits 1 0 -> -> 0 `i `uc ]
+"54
+[; ;Timer0.c: 54:                         LATDbits.LD3 = 1;
+[e = . . _LATDbits 1 3 -> -> 1 `i `uc ]
+"55
+[; ;Timer0.c: 55:                         LATDbits.LD1 = 1;
+[e = . . _LATDbits 1 1 -> -> 1 `i `uc ]
+"56
+[; ;Timer0.c: 56:                         LATDbits.LD2 = 1;
+[e = . . _LATDbits 1 2 -> -> 1 `i `uc ]
+"57
+[; ;Timer0.c: 57:                         LATB = display[Mdecenas];
+[e = _LATB -> *U + &U _display * -> _Mdecenas `ux -> -> # *U &U _display `ui `ux `uc ]
+"58
+[; ;Timer0.c: 58:                     }
+}
+[e :U 375 ]
+"59
+[; ;Timer0.c: 59:                 } else {
+}
+[e $U 376  ]
+[e :U 373 ]
+{
+"60
+[; ;Timer0.c: 60:                     Munidades++;
+[e ++ _Munidades -> -> 1 `i `uc ]
+"62
+[; ;Timer0.c: 62:                     LATDbits.LD3 = 1;
+[e = . . _LATDbits 1 3 -> -> 1 `i `uc ]
+"63
+[; ;Timer0.c: 63:                     LATDbits.LD0 = 1;
+[e = . . _LATDbits 1 0 -> -> 1 `i `uc ]
+"64
+[; ;Timer0.c: 64:                     LATDbits.LD1 = 0;
+[e = . . _LATDbits 1 1 -> -> 0 `i `uc ]
+"65
+[; ;Timer0.c: 65:                     LATDbits.LD2 = 1;
+[e = . . _LATDbits 1 2 -> -> 1 `i `uc ]
+"66
+[; ;Timer0.c: 66:                     LATB = display[Munidades];
+[e = _LATB -> *U + &U _display * -> _Munidades `ux -> -> # *U &U _display `ui `ux `uc ]
+"67
+[; ;Timer0.c: 67:                 }
+}
+[e :U 376 ]
+"68
+[; ;Timer0.c: 68:             } else {
+}
+[e $U 377  ]
+[e :U 372 ]
+{
+"69
+[; ;Timer0.c: 69:                 Sdecenas++;
+[e ++ _Sdecenas -> -> 1 `i `uc ]
+"70
+[; ;Timer0.c: 70:                 LATDbits.LD2 = 0;
+[e = . . _LATDbits 1 2 -> -> 0 `i `uc ]
+"71
+[; ;Timer0.c: 71:                 LATDbits.LD3 = 1;
+[e = . . _LATDbits 1 3 -> -> 1 `i `uc ]
+"72
+[; ;Timer0.c: 72:                 LATDbits.LD0 = 1;
+[e = . . _LATDbits 1 0 -> -> 1 `i `uc ]
+"73
+[; ;Timer0.c: 73:                 LATDbits.LD1 = 1;
+[e = . . _LATDbits 1 1 -> -> 1 `i `uc ]
+"75
+[; ;Timer0.c: 75:                 LATB = display[Sdecenas];
+[e = _LATB -> *U + &U _display * -> _Sdecenas `ux -> -> # *U &U _display `ui `ux `uc ]
+"76
+[; ;Timer0.c: 76:             }
+}
+[e :U 377 ]
+"77
+[; ;Timer0.c: 77:         }
+}
+[e :U 371 ]
+"79
+[; ;Timer0.c: 79:     }
 }
 [e :U 368 ]
 [e $U 369  ]
 [e :U 370 ]
-"46
-[; ;Timer0.c: 46:     return;
+"81
+[; ;Timer0.c: 81:     return;
 [e $UE 367  ]
-"47
-[; ;Timer0.c: 47: }
+"82
+[; ;Timer0.c: 82: }
 [e :UE 367 ]
 }
-"49
-[; ;Timer0.c: 49: void Init(void) {
+"84
+[; ;Timer0.c: 84: void Init(void) {
 [v _Init `(v ~T0 @X0 1 ef ]
 {
 [e :U _Init ]
 [f ]
-"51
-[; ;Timer0.c: 51:     ADCON1bits.PCFG = 0XFF;
+"86
+[; ;Timer0.c: 86:     ADCON1bits.PCFG = 0XFF;
 [e = . . _ADCON1bits 0 0 -> -> 255 `i `uc ]
-"52
-[; ;Timer0.c: 52:     TRISD = 0x00;
+"87
+[; ;Timer0.c: 87:     TRISD = 0x00;
 [e = _TRISD -> -> 0 `i `uc ]
-"53
-[; ;Timer0.c: 53:     TRISB = 0x00;
+"88
+[; ;Timer0.c: 88:     TRISB = 0x00;
 [e = _TRISB -> -> 0 `i `uc ]
-"54
-[; ;Timer0.c: 54:     LATD = 0x1F;
+"89
+[; ;Timer0.c: 89:     LATD = 0x1F;
 [e = _LATD -> -> 31 `i `uc ]
-"55
-[; ;Timer0.c: 55:     LATB = 0x00;
+"90
+[; ;Timer0.c: 90:     LATB = 0x00;
 [e = _LATB -> -> 0 `i `uc ]
-"57
-[; ;Timer0.c: 57: }
-[e :UE 371 ]
+"92
+[; ;Timer0.c: 92: }
+[e :UE 378 ]
 }
-"59
-[; ;Timer0.c: 59: void InitTMR0(void) {
+"94
+[; ;Timer0.c: 94: void InitTMR0(void) {
 [v _InitTMR0 `(v ~T0 @X0 1 ef ]
 {
 [e :U _InitTMR0 ]
 [f ]
-"62
-[; ;Timer0.c: 62:     INTCONbits.GIE = 0;
+"97
+[; ;Timer0.c: 97:     INTCONbits.GIE = 0;
 [e = . . _INTCONbits 1 7 -> -> 0 `i `uc ]
-"63
-[; ;Timer0.c: 63:     T0CONbits.T0CS = 0;
+"98
+[; ;Timer0.c: 98:     T0CONbits.T0CS = 0;
 [e = . . _T0CONbits 0 3 -> -> 0 `i `uc ]
-"64
-[; ;Timer0.c: 64:     T0CONbits.PSA = 0;
+"99
+[; ;Timer0.c: 99:     T0CONbits.PSA = 0;
 [e = . . _T0CONbits 0 1 -> -> 0 `i `uc ]
-"65
-[; ;Timer0.c: 65:     T0CONbits.T0PS = 0b111;
+"100
+[; ;Timer0.c: 100:     T0CONbits.T0PS = 0b111;
 [e = . . _T0CONbits 0 0 -> -> 7 `i `uc ]
-"66
-[; ;Timer0.c: 66:     T0CONbits.T08BIT = 0;
+"101
+[; ;Timer0.c: 101:     T0CONbits.T08BIT = 0;
 [e = . . _T0CONbits 0 4 -> -> 0 `i `uc ]
-"67
-[; ;Timer0.c: 67:     INTCONbits.TMR0IF = 0;
+"102
+[; ;Timer0.c: 102:     INTCONbits.TMR0IF = 0;
 [e = . . _INTCONbits 0 2 -> -> 0 `i `uc ]
-"68
-[; ;Timer0.c: 68:     INTCONbits.TMR0IE = 1;
+"103
+[; ;Timer0.c: 103:     INTCONbits.TMR0IE = 1;
 [e = . . _INTCONbits 0 5 -> -> 1 `i `uc ]
-"69
-[; ;Timer0.c: 69:     INTCONbits.PEIE = 1;
+"104
+[; ;Timer0.c: 104:     INTCONbits.PEIE = 1;
 [e = . . _INTCONbits 1 6 -> -> 1 `i `uc ]
-"70
-[; ;Timer0.c: 70:     INTCONbits.GIE = 1;
+"105
+[; ;Timer0.c: 105:     INTCONbits.GIE = 1;
 [e = . . _INTCONbits 1 7 -> -> 1 `i `uc ]
-"71
-[; ;Timer0.c: 71:     T0CONbits.TMR0ON = 1;
+"106
+[; ;Timer0.c: 106:     T0CONbits.TMR0ON = 1;
 [e = . . _T0CONbits 0 5 -> -> 1 `i `uc ]
-"74
-[; ;Timer0.c: 74:     TMR0H = DATTMR0;
+"109
+[; ;Timer0.c: 109:     TMR0H = DATTMR0;
 [e = _TMR0H -> _DATTMR0 `uc ]
-"75
-[; ;Timer0.c: 75:     TMR0L = (DATTMR0) >> 8;
+"110
+[; ;Timer0.c: 110:     TMR0L = (DATTMR0) >> 8;
 [e = _TMR0L -> >> _DATTMR0 -> 8 `i `uc ]
-"77
-[; ;Timer0.c: 77: }
-[e :UE 372 ]
+"112
+[; ;Timer0.c: 112: }
+[e :UE 379 ]
 }
 [v $root$_Timer0 `(v ~T0 @X0 0 e ]
-"79
-[; ;Timer0.c: 79: void __attribute__((picinterrupt(("")))) Timer0(void) {
+"114
+[; ;Timer0.c: 114: void __attribute__((picinterrupt(("")))) Timer0(void) {
 [v _Timer0 `(v ~T36 @X0 1 ef ]
 {
 [e :U _Timer0 ]
 [f ]
-"81
-[; ;Timer0.c: 81:     if (INTCONbits.T0IF) {
-[e $ ! != -> . . _INTCONbits 1 2 `i -> 0 `i 374  ]
+"116
+[; ;Timer0.c: 116:     if (INTCONbits.T0IF) {
+[e $ ! != -> . . _INTCONbits 1 2 `i -> 0 `i 381  ]
 {
-"82
-[; ;Timer0.c: 82:         TMR0H = DATTMR0;
+"117
+[; ;Timer0.c: 117:         TMR0H = DATTMR0;
 [e = _TMR0H -> _DATTMR0 `uc ]
-"83
-[; ;Timer0.c: 83:         TMR0L = (DATTMR0) >> 8;
+"118
+[; ;Timer0.c: 118:         TMR0L = (DATTMR0) >> 8;
 [e = _TMR0L -> >> _DATTMR0 -> 8 `i `uc ]
-"85
-[; ;Timer0.c: 85:         count++;
-[e ++ _count -> 1 `i ]
-"86
-[; ;Timer0.c: 86:         if (count > 9) {
-[e $ ! > _count -> 9 `i 375  ]
-{
-"87
-[; ;Timer0.c: 87:             count = 0;
-[e = _count -> 0 `i ]
-"88
-[; ;Timer0.c: 88:         }
-}
-[e :U 375 ]
-"89
-[; ;Timer0.c: 89:         INTCONbits.T0IF = 0;
+"119
+[; ;Timer0.c: 119:         Sunidades++;
+[e ++ _Sunidades -> -> 1 `i `uc ]
+"120
+[; ;Timer0.c: 120:         LATDbits.LD3 = 0;
+[e = . . _LATDbits 1 3 -> -> 0 `i `uc ]
+"121
+[; ;Timer0.c: 121:         LATDbits.LD0 = 1;
+[e = . . _LATDbits 1 0 -> -> 1 `i `uc ]
+"122
+[; ;Timer0.c: 122:         LATDbits.LD1 = 1;
+[e = . . _LATDbits 1 1 -> -> 1 `i `uc ]
+"123
+[; ;Timer0.c: 123:         LATDbits.LD2 = 1;
+[e = . . _LATDbits 1 2 -> -> 1 `i `uc ]
+"124
+[; ;Timer0.c: 124:         LATB = display[Sunidades];
+[e = _LATB -> *U + &U _display * -> _Sunidades `ux -> -> # *U &U _display `ui `ux `uc ]
+"125
+[; ;Timer0.c: 125:         INTCONbits.T0IF = 0;
 [e = . . _INTCONbits 1 2 -> -> 0 `i `uc ]
-"91
-[; ;Timer0.c: 91:     }
+"127
+[; ;Timer0.c: 127:     }
 }
-[e :U 374 ]
-"93
-[; ;Timer0.c: 93: }
-[e :UE 373 ]
+[e :U 381 ]
+"129
+[; ;Timer0.c: 129: }
+[e :UE 380 ]
 }

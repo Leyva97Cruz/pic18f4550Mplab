@@ -5633,11 +5633,14 @@ extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 1 "./Configuracion.h" 1
 # 12 "Timer0.c" 2
 # 21 "Timer0.c"
-int DATTMR0 = 64754 ;
+int DATTMR0 = 64754;
 
 int display [] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x67};
 
-int count = 0;
+char Sunidades = 9;
+char Munidades = 9;
+char Sdecenas = 5;
+char Mdecenas = 5;
 
 
 void Init(void);
@@ -5649,12 +5652,44 @@ void main(void) {
     InitTMR0();
 
     while (1) {
-        LATDbits.LD3 = 0;
-        LATDbits.LD2 = 0;
-        LATB = display[count];
 
 
 
+        if (Sunidades == 10) {
+            Sunidades = 0;
+            if (Sdecenas == 5) {
+                Sdecenas = 0;
+                if (Munidades == 9) {
+                    Munidades = 0;
+                    if (Mdecenas == 5) {
+                        Mdecenas = 0;
+                    } else {
+                        Mdecenas++;
+                        LATDbits.LD0 = 0;
+                        LATDbits.LD3 = 1;
+                        LATDbits.LD1 = 1;
+                        LATDbits.LD2 = 1;
+                        LATB = display[Mdecenas];
+                    }
+                } else {
+                    Munidades++;
+
+                    LATDbits.LD3 = 1;
+                    LATDbits.LD0 = 1;
+                    LATDbits.LD1 = 0;
+                    LATDbits.LD2 = 1;
+                    LATB = display[Munidades];
+                }
+            } else {
+                Sdecenas++;
+                LATDbits.LD2 = 0;
+                LATDbits.LD3 = 1;
+                LATDbits.LD0 = 1;
+                LATDbits.LD1 = 1;
+
+                LATB = display[Sdecenas];
+            }
+        }
 
     }
 
@@ -5696,11 +5731,12 @@ void __attribute__((picinterrupt(("")))) Timer0(void) {
     if (INTCONbits.T0IF) {
         TMR0H = DATTMR0;
         TMR0L = (DATTMR0) >> 8;
-
-        count++;
-        if (count > 9) {
-            count = 0;
-        }
+        Sunidades++;
+        LATDbits.LD3 = 0;
+        LATDbits.LD0 = 1;
+        LATDbits.LD1 = 1;
+        LATDbits.LD2 = 1;
+        LATB = display[Sunidades];
         INTCONbits.T0IF = 0;
 
     }
