@@ -5629,72 +5629,20 @@ extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 9 "Timer0.c" 2
 
 
-
 # 1 "./Configuracion.h" 1
-# 12 "Timer0.c" 2
-# 21 "Timer0.c"
-int DATTMR0 = 64754;
+# 11 "Timer0.c" 2
+# 20 "Timer0.c"
+int DATTMR0 = 57725;
 
-int display [] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x67};
+char milsecons = 90;
 
-char Sunidades = 9;
-char Munidades = 9;
-char Sdecenas = 5;
+int display [10] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x67};
+
+
 char Mdecenas = 5;
-
-
-void Init(void);
-void InitTMR0(void);
-
-void main(void) {
-
-    Init();
-    InitTMR0();
-
-    while (1) {
-
-
-
-        if (Sunidades == 10) {
-            Sunidades = 0;
-            if (Sdecenas == 5) {
-                Sdecenas = 0;
-                if (Munidades == 9) {
-                    Munidades = 0;
-                    if (Mdecenas == 5) {
-                        Mdecenas = 0;
-                    } else {
-                        Mdecenas++;
-                        LATDbits.LD0 = 0;
-                        LATDbits.LD3 = 1;
-                        LATDbits.LD1 = 1;
-                        LATDbits.LD2 = 1;
-                        LATB = display[Mdecenas];
-                    }
-                } else {
-                    Munidades++;
-
-                    LATDbits.LD3 = 1;
-                    LATDbits.LD0 = 1;
-                    LATDbits.LD1 = 0;
-                    LATDbits.LD2 = 1;
-                    LATB = display[Munidades];
-                }
-            } else {
-                Sdecenas++;
-                LATDbits.LD2 = 0;
-                LATDbits.LD3 = 1;
-                LATDbits.LD0 = 1;
-                LATDbits.LD1 = 1;
-
-                LATB = display[Sdecenas];
-            }
-        }
-
-    }
-
-    return;
-}
+char Munidades = 9;
+char Sdecenas = 4;
+char Sunidades = 5;
 
 void Init(void) {
 
@@ -5726,17 +5674,89 @@ void InitTMR0(void) {
 
 }
 
+void main(void) {
+
+    Init();
+    InitTMR0();
+
+    while (1) {
+
+
+        LATDbits.LD4 = 1;
+        _delay((unsigned long)((milsecons)*(8000000L/4000.0)));
+        LATDbits.LD0 = 1;
+        LATDbits.LD3 = 0;
+        LATDbits.LD1 = 0;
+        LATDbits.LD2 = 0;
+        LATB = display[Mdecenas];
+        _delay((unsigned long)((milsecons)*(8000000L/4000.0)));
+        LATDbits.LD3 = 0;
+        LATDbits.LD0 = 0;
+        LATDbits.LD1 = 1;
+        LATDbits.LD2 = 0;
+        LATB = display[Munidades];
+        _delay((unsigned long)((milsecons)*(8000000L/4000.0)));
+        LATDbits.LD2 = 1;
+        LATDbits.LD3 = 0;
+        LATDbits.LD0 = 0;
+        LATDbits.LD1 = 0;
+        LATB = display[Sdecenas];
+        _delay((unsigned long)((milsecons)*(8000000L/4000.0)));
+        LATDbits.LD3 = 1;
+        LATDbits.LD0 = 0;
+        LATDbits.LD1 = 0;
+        LATDbits.LD2 = 0;
+        LATB = display[Sunidades];
+        _delay((unsigned long)((milsecons)*(8000000L/4000.0)));
+    }
+
+    return;
+}
+
+
 void __attribute__((picinterrupt(("")))) Timer0(void) {
 
     if (INTCONbits.T0IF) {
         TMR0H = DATTMR0;
         TMR0L = (DATTMR0) >> 8;
+
         Sunidades++;
-        LATDbits.LD3 = 0;
-        LATDbits.LD0 = 1;
-        LATDbits.LD1 = 1;
-        LATDbits.LD2 = 1;
-        LATB = display[Sunidades];
+
+        if (Sunidades >= 9)
+        {
+
+            Sunidades = 0;
+
+            if (Sdecenas >= 5)
+            {
+                Sdecenas = 0;
+
+                if (Munidades >= 9)
+                {
+                    Munidades = 0;
+
+                    if (Mdecenas >= 5)
+                    {
+                        Mdecenas = 0;
+                    }
+                    else
+                    {
+                        Mdecenas++;
+
+                    }
+                }
+                else
+                {
+                    Munidades++;
+
+                }
+            }
+            else
+            {
+                Sdecenas++;
+            }
+        }
+        LATDbits.LD4 = 0;
         INTCONbits.T0IF = 0;
 
     }
